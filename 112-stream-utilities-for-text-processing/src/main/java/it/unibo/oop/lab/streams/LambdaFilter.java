@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.util.Arrays;
 import java.util.function.Function;
 
 import javax.swing.BorderFactory;
@@ -38,7 +39,19 @@ public final class LambdaFilter extends JFrame {
         /**
          * Commands.
          */
-        IDENTITY("No modifications", Function.identity());
+        IDENTITY("No modifications", Function.identity()),
+        // 1) Convert to lowercase
+        TO_LOWER("To Lower", String::toLowerCase),
+        // 2) Count the number of chars
+        COUNT_CHARS("Count number of chars", x -> Integer.toString(x.length())),
+        // 3) Count the number of lines
+        COUNT_LINES("Count number of lines", x -> Long.toString(x.chars().filter(f -> f == '\n').count())),
+        // 4) List all the words in alphabetical order
+        //ALPHABETICAL_ORDER("all the words in alphabetical order", x -> Arrays.stream(x).sorted())
+        // 5) Write the count for each word, e.g. "word word pippo" should output "pippo -> 1 word -> 2"
+
+
+        ;
 
         private final String commandName;
         private final Function<String, String> fun;
