@@ -8,6 +8,8 @@ import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,13 +47,19 @@ public final class LambdaFilter extends JFrame {
         // 2) Count the number of chars
         COUNT_CHARS("Count number of chars", x -> Integer.toString(x.length())),
         // 3) Count the number of lines
-        COUNT_LINES("Count number of lines", x -> Long.toString(x.chars().filter(f -> f == '\n').count())),
+        COUNT_LINES("Count number of lines", x -> Long.toString(x.chars().filter(f -> f == '\n').count()+1)),
         // 4) List all the words in alphabetical order
-        //ALPHABETICAL_ORDER("all the words in alphabetical order", x -> Arrays.stream(x).sorted())
+        ALPHABETICAL_ORDER("All the words in alphabetical order", x -> Arrays.stream(x.split("(\\s|\\p{Punct})+"))
+            .sorted().
+            collect(Collectors.joining("\n"))),
         // 5) Write the count for each word, e.g. "word word pippo" should output "pippo -> 1 word -> 2"
-
-
-        ;
+        COUNT_WORD("Word count", x -> Arrays.stream(x.split("(\\s|\\p{Punct})+"))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet()
+            .stream()
+            .map(e -> e.getKey() + " -> " + e.getValue())
+            .collect(Collectors.joining("\n"))
+        );
 
         private final String commandName;
         private final Function<String, String> fun;
