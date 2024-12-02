@@ -8,7 +8,6 @@ import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -47,7 +46,7 @@ public final class LambdaFilter extends JFrame {
         // 2) Count the number of chars
         COUNT_CHARS("Count number of chars", x -> Integer.toString(x.length())),
         // 3) Count the number of lines
-        COUNT_LINES("Count number of lines", x -> Long.toString(x.chars().filter(f -> f == '\n').count()+1)),
+        COUNT_LINES("Count number of lines", x -> Long.toString(x.chars().filter(f -> f == '\n').count() + 1)),
         // 4) List all the words in alphabetical order
         ALPHABETICAL_ORDER("All the words in alphabetical order", x -> Arrays.stream(x.split("(\\s|\\p{Punct})+"))
             .sorted().
@@ -81,7 +80,7 @@ public final class LambdaFilter extends JFrame {
 
     private LambdaFilter() {
         super("Lambda filter GUI");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //NOPMD suppressed
         final JPanel panel1 = new JPanel();
         final LayoutManager layout = new BorderLayout();
         panel1.setLayout(layout);
