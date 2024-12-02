@@ -3,6 +3,7 @@
 .gradle/
 .vscode/
 *.iml
+gradlew.bat
 
 # output folders
 bin/
