@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,7 +34,7 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return this.songs.stream().map(x -> x.getSongName()).sorted();
+        return this.songs.stream().map(Song::getSongName).sorted();
     }
 
     @Override
@@ -43,7 +44,7 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> albumInYear(final int year) {
-        return this.albums.entrySet().stream().filter(x -> x.getValue() == year).map(x -> x.getKey());
+        return this.albums.entrySet().stream().filter(x -> x.getValue() == year).map(Entry::getKey);
     }
 
     @Override
@@ -65,25 +66,25 @@ public final class MusicGroupImpl implements MusicGroup {
         return this.songs.stream()
                 .filter(x -> x.getAlbumName().isPresent())
                 .filter(x -> x.getAlbumName().get().equals(albumName))
-                .mapToDouble(x -> x.getDuration())
+                .mapToDouble(Song::getDuration)
                 .average();
     }
 
     @Override
     public Optional<String> longestSong() {
         return this.songs.stream()
-                .collect(Collectors.maxBy(Comparator.comparingDouble(x -> x.getDuration())))
-                .map(x -> x.getSongName());
+                .collect(Collectors.maxBy(Comparator.comparingDouble(Song::getDuration)))
+                .map(Song::getSongName);
     }
 
     @Override
     public Optional<String> longestAlbum() {
         return this.songs.stream()
                 .filter(x -> x.getAlbumName().isPresent())
-                .collect(Collectors.groupingBy(x -> x.getAlbumName(), Collectors.summingDouble(x -> x.getDuration())))
+                .collect(Collectors.groupingBy(Song::getAlbumName, Collectors.summingDouble(Song::getDuration)))
                 .entrySet().stream()
-                .collect(Collectors.maxBy(Comparator.comparingDouble(x -> x.getValue())))
-                .flatMap(x -> x.getKey());
+                .collect(Collectors.maxBy(Comparator.comparingDouble(Entry::getValue)))
+                .flatMap(Entry::getKey);
     }
 
     private static final class Song {
